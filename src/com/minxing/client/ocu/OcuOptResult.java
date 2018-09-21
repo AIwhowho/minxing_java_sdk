@@ -26,4 +26,12 @@ public class OcuOptResult {
     public String toString() {
         return JSONObject.toJSONString(this);
     }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

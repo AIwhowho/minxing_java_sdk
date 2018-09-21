@@ -1,3 +1,4 @@
+import com.alibaba.fastjson.JSONObject;
 import com.minxing.client.app.AppAccount;
 import com.minxing.client.model.ApiErrorException;
 import com.minxing.client.ocu.ArticleMessageNew;
@@ -15,9 +16,9 @@ public class TestOcuAccountV2 {
     static String bearToken = "m7EHRpSGyf6USYI4ukO0pskn1XPvF4p8lPSADRrVhf6eRbQf"; //接入端access token
 
     public static void main(String[] args) throws ApiErrorException {
-        sendOcuMessage();//发送
+//        sendOcuMessage();//发送
 //        deleteOcuMessage();//删除
-//        allTopMsg();//全量同步轮播图
+        allTopMsg();//全量同步轮播图
 //        modifyArticle();//修改文章的接口
     }
 
@@ -33,7 +34,7 @@ public class TestOcuAccountV2 {
         String ocuId = "domain_2";
         //要修改的文章对象
         ModifyArticle modifyArticle = new ModifyArticle();
-        modifyArticle.setId(1l);//文章id
+        modifyArticle.setId(9556l);//文章id
         modifyArticle.setTitle("test test");//文章标题
         modifyArticle.setImage("http://pic-bucket.nosdn.127.net/photo/0001/2018-09-21/DS895LST00AN0001NOS.jpg");//图片地址
         modifyArticle.setDescription("修改文章内容");//文章描述
@@ -71,7 +72,7 @@ public class TestOcuAccountV2 {
         //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
         String ocuId = "domain_2";
         Long[] msgIds = new Long[1];//msgId数组
-        msgIds[0] = 1l;
+        msgIds[0] = 5058l;
         final OcuOptResult result = account.OcusAllTopMsg(ocuId, msgIds);
         System.out.println(result);
     }
@@ -84,7 +85,7 @@ public class TestOcuAccountV2 {
         AppAccount account = AppAccount.loginByAccessToken(
                 serverURL,
                 bearToken);
-        final OcuOptResult result = account.OcusDelMsg(1111l);//传入参数为msgId
+        final OcuOptResult result = account.OcusDelMsg(5057l);//传入参数为msgId
         System.out.println(result);
     }
 
@@ -167,7 +168,7 @@ public class TestOcuAccountV2 {
         final Map<String, Object> stringObjectMap;
         try {
             stringObjectMap = account.sendOcuMessageAndGetResult(articleMessage, network_id);
-            System.out.println(stringObjectMap);
+            System.out.println(JSONObject.toJSON(stringObjectMap));
         } catch (ApiErrorException e) {
             e.printStackTrace();
         }

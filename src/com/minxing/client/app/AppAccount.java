@@ -4524,6 +4524,7 @@ public class AppAccount extends Account {
      * @throws ApiErrorException
      */
     public OcuOptResult OcusAllTopMsg(String ocuId, Long[] msgIds) throws ApiErrorException {
+        OcuOptResult result;
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("User-Agent", this.user_agent);
         headers.put("Authorization", "Bearer " + this._token);
@@ -4531,12 +4532,11 @@ public class AppAccount extends Account {
         body.put("ocuId", ocuId);
         body.put("msgIds", msgIds);
         String jsonBody = body.toJSONString();
-        final String s = HttpUtil.postJson(this._serverURL + "/mxpp/custom/all_top_msg", headers, jsonBody);
-        OcuOptResult result;
         try {
+            final String s = HttpUtil.postJson(this._serverURL + "/mxpp/custom/all_top_msg", headers, jsonBody);
             result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
         } catch (Exception e) {
-            throw new ApiErrorException("返回JSON错误", 0, e);
+            throw new ApiErrorException("OcusAllTopMsg error>>>", 0, e);
         }
         return result;
     }
@@ -4553,6 +4553,7 @@ public class AppAccount extends Account {
         headers.put("User-Agent", this.user_agent);
         headers.put("Authorization", "Bearer " + this._token);
         final String s = HttpUtil.delete(this._serverURL + "/mxpp/custom/message/" + msgId, headers);
+        log.info("OcusDelMsg>>>" + s);
         OcuOptResult result;
         try {
             result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
