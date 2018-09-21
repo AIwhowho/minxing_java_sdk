@@ -2020,7 +2020,7 @@ public class AppAccount extends Account {
      * @param message   消息对象数据，可以是复杂文本，也可以是简单对象
      * @param ocuId     公众号的id
      * @param ocuSecret 公众号的秘钥，校验是否可以发送
-     * @param sso_key   toUsers的类型,可以选择的值为login_name,email,user_id
+     * @param ssoKey   toUsers的类型,可以选择的值为login_name,email,user_id
      * @return
      */
     public OcuMessageSendResult sendOcuMessageToUsers(String[] toUsers,
@@ -4282,6 +4282,13 @@ public class AppAccount extends Account {
         }
     }
 
+    /**
+     * 更改考勤同步状态
+     *
+     * @param id         punch_info ID
+     * @param synStatus 同步状态
+     * @throws ApiErrorException
+     */
     public void updateSynStatus(int id, int synStatus) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
@@ -4299,13 +4306,14 @@ public class AppAccount extends Account {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
     }
+
     /**
      * 打卡
-     *
-     * @param user_id    用户ID
-     * @param punch_date 打卡时间,不传递则使用服务器时间,建议不传递(格式为HH:mm:ss)
-     * @param punch_time 打卡日期,不传递则使用服务器时间,建议不传递(格式为yyyy-MM-dd)
-     * @return 当次打卡数据
+     * @param ctrl_id
+     * @param punch_date
+     * @param punch_time
+     * @param sort
+     * @param punchType
      * @throws ApiErrorException
      */
     public void punch(String ctrl_id, String punch_date, String punch_time, String sort, String punchType) throws ApiErrorException {
@@ -4340,6 +4348,15 @@ public class AppAccount extends Account {
         }
     }
 
+    /**
+     * 打卡
+     *
+     * @param user_id    用户ID
+     * @param punch_date 打卡时间,不传递则使用服务器时间,建议不传递(格式为HH:mm:ss)
+     * @param punch_time 打卡日期,不传递则使用服务器时间,建议不传递(格式为yyyy-MM-dd)
+     * @return 当次打卡数据
+     * @throws ApiErrorException
+     */
     public PunchInfo punch(int user_id, String punch_date, String punch_time) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap();
@@ -4386,10 +4403,11 @@ public class AppAccount extends Account {
     }
 
     /**
-     * 更改考勤同步状态
      *
-     * @param id         punch_info ID
-     * @param synStatus 同步状态
+     * 更新打卡数据
+      * @param fingerprint_id
+     * @param punch_date
+     * @param punch_time
      * @throws ApiErrorException
      */
     public void updateEndPunch(String fingerprint_id, String punch_date, String punch_time) throws ApiErrorException {
