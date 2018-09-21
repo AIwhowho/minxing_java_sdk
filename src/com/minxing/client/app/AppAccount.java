@@ -4279,6 +4279,23 @@ public class AppAccount extends Account {
         }
     }
 
+    public void updateSynStatus(int id, int synStatus) throws ApiErrorException {
+        try {
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("id", String.valueOf(id));
+            params.put("synStatus", String.valueOf(synStatus));
+//            Map<String, String> headers = new HashMap<String, String>();
+            JSONObject json_result = put("/api/v2/attendance/open/punch/update/" + id + "/synStatus" + synStatus, params);
+            int code = "ok".equalsIgnoreCase(json_result.getString("msg")) ? 1 : 0;
+
+            if (code != 1) {
+                JSONObject errors = json_result.getJSONObject("errors");
+                throw new ApiErrorException(0, errors.getString("message"));
+            }
+        } catch (JSONException e) {
+            throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
     /**
      * 打卡
      *
@@ -4288,36 +4305,69 @@ public class AppAccount extends Account {
      * @return 当次打卡数据
      * @throws ApiErrorException
      */
-    public PunchInfo punch(int user_id, String punch_date, String punch_time) throws ApiErrorException {
+    public void punch(String ctrl_id, String punch_date, String punch_time, String sort, String punchType) throws ApiErrorException {
         try {
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put("userId", String.valueOf(user_id));
+            HashMap<String, String> params = new HashMap();
+            params.put("fingerprint_id", ctrl_id);
             if (StringUtil.isNotEmpty(punch_date)) {
                 params.put("punchDate", punch_date);
             }
+
             if (StringUtil.isNotEmpty(punch_time)) {
                 params.put("punchTime", punch_time);
             }
 
-            Map<String, String> headers = new HashMap<String, String>();
-            Response post = post(
-                    "/api/v2/attendance/open/punch", params, headers);
+            if (StringUtil.isNotEmpty(sort)) {
+                params.put("sort", sort);
+            }
+
+            if (StringUtil.isNotEmpty(punchType)) {
+                params.put("punchType", punchType);
+            }
+
+            Map<String, String> headers = new HashMap();
+            Response post = this.post("/api/v2/attendance/open/zy/punch", params, headers);
             JSONObject json_result = post.asJSONObject();
             if (post.getStatusCode() != 200) {
                 JSONObject errors = json_result.getJSONObject("errors");
                 throw new ApiErrorException(Integer.valueOf(errors.getString("status_code")), errors.getString("message"));
             }
-            PunchInfo punchInfo = new PunchInfo();
-            punchInfo.setPunchDate(json_result.getString("punchDate"));
-            JSONObject data = json_result.getJSONObject("data");
-            punchInfo.setPunchTime(data.getString("punchTime"));
-            punchInfo.setItemSort(data.getInt("itemSort"));
-            punchInfo.setStatus(data.getInt("status"));
-            punchInfo.setPunchType(data.getInt("punchType"));
-            punchInfo.setCanApproval(data.getInt("canApproval") == 1);
-            return punchInfo;
-        } catch (JSONException e) {
-            throw new ApiErrorException("返回JSON错误", 500, e);
+        } catch (JSONException var11) {
+            throw new ApiErrorException("返回JSON错误", 500, var11);
+        }
+    }
+
+    public PunchInfo punch(int user_id, String punch_date, String punch_time) throws ApiErrorException {
+        try {
+            HashMap<String, String> params = new HashMap();
+            params.put("userId", String.valueOf(user_id));
+            if (StringUtil.isNotEmpty(punch_date)) {
+                params.put("punchDate", punch_date);
+            }
+
+            if (StringUtil.isNotEmpty(punch_time)) {
+                params.put("punchTime", punch_time);
+            }
+
+            Map<String, String> headers = new HashMap();
+            Response post = this.post("/api/v2/attendance/open/punch", params, headers);
+            JSONObject json_result = post.asJSONObject();
+            if (post.getStatusCode() != 200) {
+                JSONObject errors = json_result.getJSONObject("errors");
+                throw new ApiErrorException(Integer.valueOf(errors.getString("status_code")), errors.getString("message"));
+            } else {
+                PunchInfo punchInfo = new PunchInfo();
+                punchInfo.setPunchDate(json_result.getString("punchDate"));
+                JSONObject data = json_result.getJSONObject("data");
+                punchInfo.setPunchTime(data.getString("punchTime"));
+                punchInfo.setItemSort(data.getInt("itemSort"));
+                punchInfo.setStatus(data.getInt("status"));
+                punchInfo.setPunchType(data.getInt("punchType"));
+                punchInfo.setCanApproval(data.getInt("canApproval") == 1);
+                return punchInfo;
+            }
+        } catch (JSONException var10) {
+            throw new ApiErrorException("返回JSON错误", 500, var10);
         }
     }
 
@@ -4329,9 +4379,38 @@ public class AppAccount extends Account {
      * @throws ApiErrorException
      */
     public PunchInfo punch(int user_id) throws ApiErrorException {
-        return punch(user_id, null, null);
+        return this.punch(user_id, (String)null, (String)null);
     }
 
+    /**
+     * 更改考勤同步状态
+     *
+     * @param id         punch_info ID
+     * @param synStatus 同步状态
+     * @throws ApiErrorException
+     */
+    public void updateEndPunch(String fingerprint_id, String punch_date, String punch_time) throws ApiErrorException {
+        try {
+            HashMap<String, String> params = new HashMap();
+            params.put("fingerprint_id", fingerprint_id);
+            if (StringUtil.isNotEmpty(punch_date)) {
+                params.put("punchDate", punch_date);
+            }
+
+            if (StringUtil.isNotEmpty(punch_time)) {
+                params.put("punchTime", punch_time);
+            }
+
+            JSONObject json_result = this.put("/api/v2/attendance/open/punch/update/time", params);
+            int code = json_result.getInt("code");
+            if (code > 0 && code != 200 && code != 201) {
+                String msg = json_result.getString("message");
+                throw new ApiErrorException(code, msg);
+            }
+        } catch (JSONException var8) {
+            throw new ApiErrorException("返回JSON错误", 500, var8);
+        }
+    }
 
     /**
      * 批量打标签
