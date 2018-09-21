@@ -16,12 +16,12 @@ public class User extends Organization {
     private Long id; // 用户id
     private String login_name = null; // Account's login_name
     private String password; // 密码
-    private String email; // 邮箱
+    private String email = ""; // 邮箱
     private String name; // 姓名
-    private String title; // 职务
-    private String cellvoice1; // 手机号码
-    private String cellvoice2; // 备用手机号码
-    private String workvoice = null; // 固定电话
+    private String title = ""; // 职务
+    private String cellvoice1 = ""; // 手机号码
+    private String cellvoice2 = ""; // 备用手机号码
+    private String workvoice = ""; // 固定电话
     private String emp_code; // 工号
     private String dept_code; // 部门标识
     private Long dept_id = null; // 部门标识
@@ -39,7 +39,7 @@ public class User extends Organization {
     private String with_account; // if true also delete the user account
 
 
-    private String preferred_mobile = null;
+    private String preferred_mobile = "";
 
     //2018年2月27日 应需求增加生日字段，格式：yyyy-MM-dd
     private String birthday = null;

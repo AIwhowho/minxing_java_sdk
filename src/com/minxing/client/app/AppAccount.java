@@ -2806,9 +2806,7 @@ public class AppAccount extends Account {
      * @throws ApiErrorException
      */
     public User addNewUser(User user) throws ApiErrorException {
-
         try {
-
             HashMap<String, String> params = user.toHash();
             Map<String, String> headers = new HashMap<String, String>();
 
@@ -2828,7 +2826,6 @@ public class AppAccount extends Account {
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
-
     }
 
     /**
