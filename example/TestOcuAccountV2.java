@@ -16,10 +16,10 @@ public class TestOcuAccountV2 {
     static String bearToken = "m7EHRpSGyf6USYI4ukO0pskn1XPvF4p8lPSADRrVhf6eRbQf"; //接入端access token
 
     public static void main(String[] args) throws ApiErrorException {
-//        sendOcuMessage();//发送
-//        deleteOcuMessage();//删除
+        sendOcuMessage();//发送
+        deleteOcuMessage();//删除
         allTopMsg();//全量同步轮播图
-//        modifyArticle();//修改文章的接口
+        modifyArticle();//修改文章的接口
     }
 
     /**
@@ -71,8 +71,9 @@ public class TestOcuAccountV2 {
                 bearToken);
         //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
         String ocuId = "domain_2";
-        Long[] msgIds = new Long[1];//msgId数组
+        Long[] msgIds = new Long[2];//msgId数组
         msgIds[0] = 5058l;
+        msgIds[1] = 5060l;
         final OcuOptResult result = account.OcusAllTopMsg(ocuId, msgIds);
         System.out.println(result);
     }
