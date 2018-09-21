@@ -4288,7 +4288,7 @@ public class AppAccount extends Account {
             params.put("id", String.valueOf(id));
             params.put("synStatus", String.valueOf(synStatus));
 //            Map<String, String> headers = new HashMap<String, String>();
-            JSONObject json_result = put("/api/v2/attendance/open/punch/update/" + id + "/synStatus" + synStatus, params);
+            JSONObject json_result = put("/api/v2/attendance/open/punch/update/" + id + "/synStatus/" + synStatus, params);
             int code = "ok".equalsIgnoreCase(json_result.getString("msg")) ? 1 : 0;
 
             if (code != 1) {
