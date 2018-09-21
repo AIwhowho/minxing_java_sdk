@@ -4299,6 +4299,7 @@ public class AppAccount extends Account {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
     }
+
     /**
      * 打卡
      *
@@ -4382,14 +4383,14 @@ public class AppAccount extends Account {
      * @throws ApiErrorException
      */
     public PunchInfo punch(int user_id) throws ApiErrorException {
-        return this.punch(user_id, (String)null, (String)null);
+        return this.punch(user_id, (String) null, (String) null);
     }
 
     /**
      * 更改考勤同步状态
      *
-     * @param id         punch_info ID
-     * @param synStatus 同步状态
+     * @param fingerprint_id punch_info ID
+     * @param synStatus      同步状态
      * @throws ApiErrorException
      */
     public void updateEndPunch(String fingerprint_id, String punch_date, String punch_time) throws ApiErrorException {
@@ -4483,7 +4484,7 @@ public class AppAccount extends Account {
     public JSONObject suspend(String login_names) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
-            if(null == login_names || "".equals(login_names)){
+            if (null == login_names || "".equals(login_names)) {
                 return null;
             }
             params.put("login_names", String.valueOf(login_names));
@@ -4494,6 +4495,125 @@ public class AppAccount extends Account {
             return json_result;
         } catch (Exception e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
+
+    /**
+     * 全量同步轮播图
+     *
+     * @param ocuId
+     * @param msgIds
+     * @return
+     * @throws ApiErrorException
+     */
+    public OcuOptResult OcusAllTopMsg(String ocuId, Long[] msgIds) throws ApiErrorException {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        com.alibaba.fastjson.JSONObject body = new com.alibaba.fastjson.JSONObject();
+        body.put("ocuId", ocuId);
+        body.put("msgIds", msgIds);
+        String jsonBody = body.toJSONString();
+        final String s = HttpUtil.postJson(this._serverURL + "/mxpp/custom/all_top_msg", headers, jsonBody);
+        OcuOptResult result;
+        try {
+            result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
+        } catch (Exception e) {
+            throw new ApiErrorException("返回JSON错误", 0, e);
+        }
+        return result;
+    }
+
+    /**
+     * 删除文章的接口
+     *
+     * @param msgId
+     * @return
+     * @throws ApiErrorException
+     */
+    public OcuOptResult OcusDelMsg(Long msgId) throws ApiErrorException {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        final String s = HttpUtil.delete(this._serverURL + "/mxpp/custom/message/" + msgId, headers);
+        OcuOptResult result;
+        try {
+            result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
+        } catch (Exception e) {
+            throw new ApiErrorException("返回JSON错误", 0, e);
+        }
+        return result;
+    }
+
+
+    /**
+     * 修改文章的接口
+     *
+     * @param article
+     * @return
+     * @throws ApiErrorException
+     */
+    public OcuOptResult OcusModifyArticle(ModifyArticle article) throws ApiErrorException {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        final String s = HttpUtil.putJson(this._serverURL + "/mxpp/custom/article", headers, com.alibaba.fastjson.JSONObject.toJSONString(article));
+        OcuOptResult result;
+        try {
+            result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
+        } catch (Exception e) {
+            throw new ApiErrorException("返回JSON错误", 0, e);
+        }
+        return result;
+    }
+
+    /**
+     * @param articleMessage
+     * @param network_id
+     * @return
+     */
+    public Map<String, Object> sendOcuMessageAndGetResult(ArticleMessageNew articleMessage, int network_id) throws ApiErrorException {
+        // _serverURL不能是300端口，必须是nginx端口
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 3);
+        if (articleMessage.getArticles().size() > 1) {
+            for (ArticleNew article : articleMessage.getArticles()) {
+                article.setExpire_time(null);
+                article.setShow_by_popup(false);
+            }
+        }
+
+        String timestamp = articleMessage.getTimestamp();
+        articleMessage.setTimestamp(timestamp);
+        String params = JSON.toJSONString(articleMessage);
+        String url = _serverURL + "/mxpp/ocu_messages/custom";
+
+        PostParameter[] headers = new PostParameter[]{
+                new PostParameter("Content-Type", "application/json"),
+                new PostParameter("User-Agent", "MinxingMessenger public_platform"),
+                new PostParameter("mx_network_id", String.valueOf(network_id))
+        };
+        try {
+            String res = client.post(url, params, headers, true);
+            log.info(res);
+            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(res);
+            if (jsonObject.getLong("msgId") == null) {
+                throw new ApiErrorException(400, jsonObject.getString("message"));
+            }
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("msgId", jsonObject.getLongValue("msgId"));
+            final com.alibaba.fastjson.JSONArray articleIds1 = jsonObject.getJSONArray("articleIds");
+            Long[] articleIds = new Long[articleIds1.size()];
+            for (int i = 0; i < articleIds1.size(); i++) {
+                articleIds[i] = articleIds1.getLong(i);
+            }
+            map.put("articleIds", articleIds);
+            return map;
+        } catch (Exception e) {
+            throw new ApiErrorException("sendOcuMessage error", 0, e);
         }
     }
 }
