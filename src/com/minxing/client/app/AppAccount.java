@@ -4305,6 +4305,33 @@ public class AppAccount extends Account {
     }
 
     /**
+     * 请假数据同步
+     * @param leaveStatus
+     * @param userId
+     * @param startAt
+     * @param endAt
+     */
+    public void leave(int leaveStatus, int userId, String startAt, String endAt) throws ApiErrorException {
+        try {
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("leaveStatus", String.valueOf(leaveStatus));
+            params.put("userId", String.valueOf(userId));
+            params.put("startAt", startAt);
+            params.put("endAt", endAt);
+            Map<String, String> headers = new HashMap<String, String>();
+            Response post  = this.post("/api/v2/attendance/open/punch/leave/" + leaveStatus, params, headers);
+            JSONObject json_result = post.asJSONObject();
+            int code = "ok".equalsIgnoreCase(json_result.getString("msg")) ? 1 : 0;
+            if (code != 1) {
+                JSONObject errors = json_result.getJSONObject("errors");
+                throw new ApiErrorException(0, errors.getString("message"));
+            }
+        } catch (JSONException e) {
+            throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
+
+    /**
      * 打卡
      * @param ctrl_id
      * @param punch_date
