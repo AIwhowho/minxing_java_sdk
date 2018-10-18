@@ -86,11 +86,11 @@ public class Article {
     }
 
     public String getTitle() {
-        return StringEscapeUtils.escapeJson(title);
+        return toUnicode(title);
     }
 
     public String getDescription() {
-        return StringEscapeUtils.escapeJson(description);
+        return toUnicode(description);
     }
 
     public String getPicUrl() {
@@ -197,5 +197,12 @@ public class Article {
         return action_label;
     }
 
-
+    private static String toUnicode(String str) {
+        StringBuffer unicode = new StringBuffer();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);  // 取出每一个字符
+            unicode.append("\\u" + Integer.toHexString(c));// 转换为unicode
+        }
+        return unicode.toString();
+    }
 }

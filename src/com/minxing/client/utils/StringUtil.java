@@ -25,11 +25,20 @@ public class StringUtil {
 			if(content!=null){
 //				content = content.replaceAll("(\n)", "\\\\n");
 //				content = content.replaceAll("(\r)", "\\\\r");
-				StringEscapeUtils.escapeJson(content);
+				toUnicode(content);
 			}
 			return content;
 		}
-		
+
+		private static String toUnicode(String str) {
+			StringBuffer unicode = new StringBuffer();
+			for (int i = 0; i < str.length(); i++) {
+				char c = str.charAt(i);  // 取出每一个字符
+				unicode.append("\\u" + Integer.toHexString(c));// 转换为unicode
+			}
+			return unicode.toString();
+		}
+
 		final protected static char[] hexArray = "0123456789abcdef".toCharArray();
 		public static String bytesToHex(byte[] bytes) {
 		    char[] hexChars = new char[bytes.length * 2];

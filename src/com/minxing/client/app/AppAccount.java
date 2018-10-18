@@ -9,11 +9,10 @@ import com.minxing.client.json.JSONObject;
 import com.minxing.client.model.*;
 import com.minxing.client.ocu.*;
 import com.minxing.client.ocu.Message;
-import com.minxing.client.organization.AppVisibleScope;
-import com.minxing.client.organization.Department;
-import com.minxing.client.organization.Network;
+import com.minxing.client.organization.*;
 import com.minxing.client.organization.User;
 import com.minxing.client.utils.HMACSHA1;
+import com.minxing.client.utils.HttpUtil;
 import com.minxing.client.utils.StringUtil;
 import com.minxing.client.utils.UrlEncoder;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -1840,8 +1839,7 @@ public class AppAccount extends Account {
     /**
      * 发送公众号消息,指定社区id,传递的用户数组不能为空,否则会抛出异常
      *
-     * @param toUserIds  用户的login_name数组，如果传null,则会抛出异常
-     * @param network_id 用户的社区
+     * @param toUserIds  用户的login_name数组，如果传null,则会发送全员订阅用户
      * @param message    消息对象数据，可以是复杂文本，也可以是简单对象
      * @param ocuId      公众号的id
      * @param ocuSecret  公众号的秘钥，校验是否可以发送
@@ -2021,7 +2019,7 @@ public class AppAccount extends Account {
      * @param message   消息对象数据，可以是复杂文本，也可以是简单对象
      * @param ocuId     公众号的id
      * @param ocuSecret 公众号的秘钥，校验是否可以发送
-     * @param sso_key   toUsers的类型,可以选择的值为login_name,email,user_id
+     * @param ssoKey   toUsers的类型,可以选择的值为login_name,email,user_id
      * @return
      */
     public OcuMessageSendResult sendOcuMessageToUsers(String[] toUsers,
@@ -2807,9 +2805,7 @@ public class AppAccount extends Account {
      * @throws ApiErrorException
      */
     public User addNewUser(User user) throws ApiErrorException {
-
         try {
-
             HashMap<String, String> params = user.toHash();
             Map<String, String> headers = new HashMap<String, String>();
 
@@ -2829,7 +2825,6 @@ public class AppAccount extends Account {
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
-
     }
 
     /**
@@ -4073,11 +4068,11 @@ public class AppAccount extends Account {
     /**
      * 变更标识数量,推送
      *
-     * @param userId 用户ID
-     * @param appId appId
-     * @param badge 未读数
+     * @param userId  用户ID
+     * @param appId   appId
+     * @param badge   未读数
      * @param content 推送内容
-     * @param sign 标识,将直接转发给移动端,用于展示标识图片
+     * @param sign    标识,将直接转发给移动端,用于展示标识图片
      * @return
      * @throws ApiErrorException
      */
@@ -4101,7 +4096,7 @@ public class AppAccount extends Account {
      * 获取标识数量
      *
      * @param userId 用户ID
-     * @param appId appId
+     * @param appId  appId
      * @return
      * @throws ApiErrorException
      */
@@ -4129,15 +4124,32 @@ public class AppAccount extends Account {
     /**
      * 创建待办事项
      *
+     * 此方法不再支持统一待办2.0.0以上版本,因此废弃
+     *
+     * @see createTaskNew()
      * @param task 待办事项
      * @return 待办事项id
      * @throws ApiErrorException
      */
+    @Deprecated
     public int createTask(Task task) throws ApiErrorException {
+        long taskNew = createTaskNew(task);
+        return (int) taskNew;
+    }
+
+    /**
+     * 创建待办事项,目前支持统一待办全部版本
+     *
+     * @see createTaskNew()
+     * @param task 待办事项
+     * @return 待办事项id
+     * @throws ApiErrorException
+     */
+    public long createTaskNew(Task task) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("title", task.getTitle());
-            if (StringUtil.isNotEmpty(task.getRemark())){
+            if (StringUtil.isNotEmpty(task.getRemark())) {
                 params.put("remark", task.getRemark());
             }
             params.put("userId", String.valueOf(task.getUserId()));
@@ -4145,7 +4157,7 @@ public class AppAccount extends Account {
             params.put("url", task.getUrl());
             params.put("source", task.getSource());
             params.put("startAt", String.valueOf(task.getStartAt().getTime() / 1000));
-            if (task.getEndAt() != null){
+            if (task.getEndAt() != null) {
                 params.put("endAt", String.valueOf(task.getEndAt().getTime() / 1000));
             }
             if (task.getRemindTimes() != null && task.getRemindTimes().length != 0) {
@@ -4158,10 +4170,10 @@ public class AppAccount extends Account {
                 }
             }
             params.put("instantRemind", task.getInstantRemind() ? "1" : "0");
-            if (StringUtil.isNotEmpty(task.getOcuId())){
+            if (StringUtil.isNotEmpty(task.getOcuId())) {
                 params.put("ocuId", task.getOcuId());
             }
-            if (StringUtil.isNotEmpty(task.getOcuSecret())){
+            if (StringUtil.isNotEmpty(task.getOcuSecret())) {
                 params.put("ocuSecret", task.getOcuSecret());
             }
 
@@ -4173,7 +4185,7 @@ public class AppAccount extends Account {
                 JSONObject errors = json_result.getJSONObject("errors");
                 throw new ApiErrorException(Integer.valueOf(errors.getString("status_code")), errors.getString("message"));
             }
-            return json_result.getInt("id");
+            return json_result.getLong("id");
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
@@ -4189,19 +4201,19 @@ public class AppAccount extends Account {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("title", task.getTitle());
-            if (StringUtil.isNotEmpty(task.getRemark())){
+            if (StringUtil.isNotEmpty(task.getRemark())) {
                 params.put("remark", task.getRemark());
-            }else{
+            } else {
                 params.put("remark", "");
             }
             params.put("userId", String.valueOf(task.getUserId()));
             params.put("categoryCode", task.getCategoryCode());
             params.put("url", task.getUrl());
-            if(StringUtil.isNotEmpty(task.getSource())){
+            if (StringUtil.isNotEmpty(task.getSource())) {
                 params.put("source", task.getSource());
             }
             params.put("startAt", String.valueOf(task.getStartAt().getTime() / 1000));
-            if (task.getEndAt() != null){
+            if (task.getEndAt() != null) {
                 params.put("endAt", String.valueOf(task.getEndAt().getTime() / 1000));
             }
             if (task.getRemindTimes() != null && task.getRemindTimes().length != 0) {
@@ -4215,10 +4227,10 @@ public class AppAccount extends Account {
 
             }
             params.put("instantRemind", task.getInstantRemind() ? "1" : "0");
-            if (StringUtil.isNotEmpty(task.getOcuId())){
+            if (StringUtil.isNotEmpty(task.getOcuId())) {
                 params.put("ocuId", task.getOcuId());
             }
-            if (StringUtil.isNotEmpty(task.getOcuSecret())){
+            if (StringUtil.isNotEmpty(task.getOcuSecret())) {
                 params.put("ocuSecret", task.getOcuSecret());
             }
 
@@ -4242,7 +4254,7 @@ public class AppAccount extends Account {
      * @param id
      * @throws ApiErrorException
      */
-    public void deleteTask(int id) throws ApiErrorException {
+    public void deleteTask(long id) throws ApiErrorException {
         try {
             JSONObject json_result = delete(
                     "/api/v2/gtasks/open/tasks/" + id);
@@ -4260,11 +4272,11 @@ public class AppAccount extends Account {
     /**
      * 更改待办事项状态
      *
-     * @param id     待办事项ID
+     * @param id         待办事项ID
      * @param isComplete 状态,是否已完成
      * @throws ApiErrorException
      */
-    public void changeTaskStatus(int id, boolean isComplete) throws ApiErrorException {
+    public void changeTaskStatus(long id, boolean isComplete) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("id", String.valueOf(id));
@@ -4284,53 +4296,122 @@ public class AppAccount extends Account {
     }
 
     /**
-     * 打卡(中原)
+     * 更改考勤同步状态
      *
-     * @param ctrl_id    指纹ID
-     * @param punch_date 打卡时间,不传递则使用服务器时间,建议不传递(格式为HH:mm:ss)
-     * @param punch_time 打卡日期,不传递则使用服务器时间,建议不传递(格式为yyyy-MM-dd)
-     * @return 当次打卡数据
+     * @param id         punch_info ID
+     * @param synStatus 同步状态
      * @throws ApiErrorException
      */
-    public void punch(String ctrl_id, String punch_date, String punch_time,String sort,String punchType) throws ApiErrorException {
+    public void updateSynStatus(int id, int synStatus) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
-            params.put("fingerprint_id", ctrl_id);
-            if (StringUtil.isNotEmpty(punch_date)) {
-                params.put("punchDate", punch_date);
-            }
-            if (StringUtil.isNotEmpty(punch_time)) {
-                params.put("punchTime", punch_time);
-            }
-            if (StringUtil.isNotEmpty(sort)) {
-                params.put("sort", sort);
-            }
-            if (StringUtil.isNotEmpty(punchType)) {
-                params.put("punchType", punchType);
-            }
+            params.put("id", String.valueOf(id));
+            params.put("synStatus", String.valueOf(synStatus));
+//            Map<String, String> headers = new HashMap<String, String>();
+            JSONObject json_result = put("/api/v2/attendance/open/punch/update/" + id + "/synStatus/" + synStatus, params);
+            int code = "ok".equalsIgnoreCase(json_result.getString("msg")) ? 1 : 0;
 
-            Map<String, String> headers = new HashMap<String, String>();
-            Response post = post(
-                    "/api/v2/attendance/open/zy/punch", params, headers);
-            JSONObject json_result = post.asJSONObject();
-            if (post.getStatusCode() != 200) {
+            if (code != 1) {
                 JSONObject errors = json_result.getJSONObject("errors");
-                throw new ApiErrorException(Integer.valueOf(errors.getString("status_code")), errors.getString("message"));
+                throw new ApiErrorException(0, errors.getString("message"));
             }
-//            PunchInfo punchInfo = new PunchInfo();
-//            punchInfo.setPunchDate(json_result.getString("punchDate"));
-//            JSONObject data = json_result.getJSONObject("data");
-//            punchInfo.setPunchTime(data.getString("punchTime"));
-//            punchInfo.setItemSort(data.getInt("itemSort"));
-//            punchInfo.setStatus(data.getInt("status"));
-//            punchInfo.setPunchType(data.getInt("punchType"));
-//            punchInfo.setCanApproval(data.getInt("canApproval") == 1);
-//            return punchInfo;
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
     }
 
+    /**
+     * 请假数据同步
+     * @param leaveStatus
+     * @param userId
+     * @param startAt
+     * @param endAt
+     */
+    public void leave(int leaveStatus, int leaveType, int userId, String startAt, String endAt) throws ApiErrorException {
+        try {
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("leaveStatus", String.valueOf(leaveStatus));
+            params.put("leaveType", String.valueOf(leaveType));
+            params.put("userId", String.valueOf(userId));
+            params.put("startAt", startAt);
+            params.put("endAt", endAt);
+            Map<String, String> headers = new HashMap<String, String>();
+            Response post  = this.post("/api/v2/attendance/open/punch/leave/" + leaveStatus, params, headers);
+            JSONObject json_result = post.asJSONObject();
+            int code = "ok".equalsIgnoreCase(json_result.getString("msg")) ? 1 : 0;
+            if (code != 1) {
+                JSONObject errors = json_result.getJSONObject("errors");
+                throw new ApiErrorException(0, errors.getString("message"));
+            }
+        } catch (JSONException e) {
+            throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
+
+    /**
+     * 获取请假数据详情
+     * @param userId
+     */
+    public LeaveModel getLeave(int userId) throws ApiErrorException {
+        LeaveModel leaveModel = null;
+        try {
+            JSONObject jsonObject  = this.get("/api/v2/attendance/open/punch/leave/getLeave/" + userId);
+            if(null != jsonObject){
+                leaveModel = new LeaveModel();
+                leaveModel.setId(jsonObject.getInt("id"));
+                leaveModel.setUserId(jsonObject.getInt("userId"));
+                leaveModel.setStartAt(jsonObject.getLong("startAt"));
+                leaveModel.setEndAt(jsonObject.getLong("endAt"));
+                leaveModel.setLeaveStatus(jsonObject.getInt("leaveStatus"));
+                leaveModel.setLeaveType(jsonObject.getInt("leaveType"));
+                leaveModel.setFirstPunchAt(jsonObject.getLong("firstPunchAt"));
+            }
+            return leaveModel;
+        } catch (JSONException e) {
+            throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
+
+    /**
+     * 打卡
+     * @param ctrl_id
+     * @param punch_date
+     * @param punch_time
+     * @param sort
+     * @param punchType
+     * @throws ApiErrorException
+     */
+    public void punch(String ctrl_id, String punch_date, String punch_time, String sort, String punchType) throws ApiErrorException {
+        try {
+            HashMap<String, String> params = new HashMap();
+            params.put("fingerprint_id", ctrl_id);
+            if (StringUtil.isNotEmpty(punch_date)) {
+                params.put("punchDate", punch_date);
+            }
+
+            if (StringUtil.isNotEmpty(punch_time)) {
+                params.put("punchTime", punch_time);
+            }
+
+            if (StringUtil.isNotEmpty(sort)) {
+                params.put("sort", sort);
+            }
+
+            if (StringUtil.isNotEmpty(punchType)) {
+                params.put("punchType", punchType);
+            }
+
+            Map<String, String> headers = new HashMap();
+            Response post = this.post("/api/v2/attendance/open/zy/punch", params, headers);
+            JSONObject json_result = post.asJSONObject();
+            if (post.getStatusCode() != 200) {
+                JSONObject errors = json_result.getJSONObject("errors");
+                throw new ApiErrorException(Integer.valueOf(errors.getString("status_code")), errors.getString("message"));
+            }
+        } catch (JSONException var11) {
+            throw new ApiErrorException("返回JSON错误", 500, var11);
+        }
+    }
 
     /**
      * 打卡
@@ -4343,97 +4424,281 @@ public class AppAccount extends Account {
      */
     public PunchInfo punch(int user_id, String punch_date, String punch_time) throws ApiErrorException {
         try {
-            HashMap<String, String> params = new HashMap<String, String>();
+            HashMap<String, String> params = new HashMap();
             params.put("userId", String.valueOf(user_id));
             if (StringUtil.isNotEmpty(punch_date)) {
                 params.put("punchDate", punch_date);
             }
+
             if (StringUtil.isNotEmpty(punch_time)) {
                 params.put("punchTime", punch_time);
             }
 
-            Map<String, String> headers = new HashMap<String, String>();
-            Response post = post(
-                    "/api/v2/attendance/open/punch", params, headers);
+            Map<String, String> headers = new HashMap();
+            Response post = this.post("/api/v2/attendance/open/punch", params, headers);
             JSONObject json_result = post.asJSONObject();
             if (post.getStatusCode() != 200) {
                 JSONObject errors = json_result.getJSONObject("errors");
                 throw new ApiErrorException(Integer.valueOf(errors.getString("status_code")), errors.getString("message"));
+            } else {
+                PunchInfo punchInfo = new PunchInfo();
+                punchInfo.setPunchDate(json_result.getString("punchDate"));
+                JSONObject data = json_result.getJSONObject("data");
+                punchInfo.setPunchTime(data.getString("punchTime"));
+                punchInfo.setItemSort(data.getInt("itemSort"));
+                punchInfo.setStatus(data.getInt("status"));
+                punchInfo.setPunchType(data.getInt("punchType"));
+                punchInfo.setCanApproval(data.getInt("canApproval") == 1);
+                return punchInfo;
             }
-            PunchInfo punchInfo = new PunchInfo();
-            punchInfo.setPunchDate(json_result.getString("punchDate"));
-            JSONObject data = json_result.getJSONObject("data");
-            punchInfo.setPunchTime(data.getString("punchTime"));
-            punchInfo.setItemSort(data.getInt("itemSort"));
-            punchInfo.setStatus(data.getInt("status"));
-            punchInfo.setPunchType(data.getInt("punchType"));
-            punchInfo.setCanApproval(data.getInt("canApproval") == 1);
-            return punchInfo;
-        } catch (JSONException e) {
-            throw new ApiErrorException("返回JSON错误", 500, e);
+        } catch (JSONException var10) {
+            throw new ApiErrorException("返回JSON错误", 500, var10);
         }
     }
 
     /**
      * 打卡
      *
-     * @param user_id    用户ID
+     * @param user_id 用户ID
      * @return 当次打卡数据
      * @throws ApiErrorException
      */
     public PunchInfo punch(int user_id) throws ApiErrorException {
-        return punch(user_id, null, null);
+        return this.punch(user_id, (String) null, (String) null);
     }
 
-    /**
-     * 更新下班打卡
-     *
-     * @param fingerprint_id    用户指纹ID
-     * @return 当次打卡数据
-     * @throws ApiErrorException
-     */
-//    public PunchInfo updateEndPunch(int fingerprint_id) throws ApiErrorException {
-//        return updateEndPunch(fingerprint_id, null, null);
-//    }
+
 
     /**
-     * 更新下班打卡
      *
-     * @param fingerprint_id    用户指纹ID
-     * @param punch_date 打卡时间,不传递则使用服务器时间(格式为HH:mm:ss)
-     * @param punch_time 打卡日期,不传递则使用服务器时间(格式为yyyy-MM-dd)
-     * @return 当次打卡数据
+     * 更新打卡数据
+      * @param fingerprint_id
+     * @param punch_date
+     * @param punch_time
      * @throws ApiErrorException
      */
     public void updateEndPunch(String fingerprint_id, String punch_date, String punch_time) throws ApiErrorException {
         try {
-            HashMap<String, String> params = new HashMap<String, String>();
+            HashMap<String, String> params = new HashMap();
             params.put("fingerprint_id", fingerprint_id);
             if (StringUtil.isNotEmpty(punch_date)) {
                 params.put("punchDate", punch_date);
             }
+
             if (StringUtil.isNotEmpty(punch_time)) {
                 params.put("punchTime", punch_time);
             }
-            JSONObject json_result = put(
-                    "/api/v2/attendance/open/punch/update/time", params);
 
+            JSONObject json_result = this.put("/api/v2/attendance/open/punch/update/time", params);
             int code = json_result.getInt("code");
             if (code > 0 && code != 200 && code != 201) {
                 String msg = json_result.getString("message");
                 throw new ApiErrorException(code, msg);
             }
-//            PunchInfo punchInfo = new PunchInfo();
-//            punchInfo.setPunchDate(json_result.getString("punchDate"));
-//            JSONObject data = json_result.getJSONObject("data");
-//            punchInfo.setPunchTime(data.getString("punchTime"));
-//            punchInfo.setItemSort(data.getInt("itemSort"));
-//            punchInfo.setStatus(data.getInt("status"));
-//            punchInfo.setPunchType(data.getInt("punchType"));
-//            punchInfo.setCanApproval(data.getInt("canApproval") == 1);
-//            return punchInfo;
-        } catch (JSONException e) {
+        } catch (JSONException var8) {
+            throw new ApiErrorException("返回JSON错误", 500, var8);
+        }
+    }
+
+    /**
+     * 批量打标签
+     *
+     * @param tagToUsers TagToUser对象，每次最多20个
+     * @return
+     */
+    public Boolean batchTagToUsers(List<TagToUser> tagToUsers) throws ApiErrorException {
+        if (tagToUsers.size() > 20) {
+            throw new ApiErrorException(400, "每次不能超过20个用户");
+        }
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        final String s = HttpUtil.putJson(this._serverURL + "/api/v1/tag/tp/sync/update", headers, com.alibaba.fastjson.JSONObject.toJSONString(tagToUsers));
+        final com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+        if (jsonObject.getString("msg").equals("OK")) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 查询标签
+     *
+     * @return
+     */
+    public List<Tags.Group> getAllTag() throws ApiErrorException {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        final String s = HttpUtil.get(this._serverURL + "/api/v1/tag/tp/sync/all_tag", headers);
+        final com.alibaba.fastjson.JSONArray jsonArray = com.alibaba.fastjson.JSONArray.parseArray(s);
+        List<Tags.Group> list = new ArrayList<Tags.Group>();
+        for (Object x : jsonArray) {
+            com.alibaba.fastjson.JSONObject jo = (com.alibaba.fastjson.JSONObject) x;
+            final Tags.Group group = new Tags.Group();
+            group.setId(jo.getLong("id"));
+            group.setDisplayOrder(jo.getLong("display_order"));
+            group.setTitle(jo.getString("title"));
+            final com.alibaba.fastjson.JSONArray tag_infos = jo.getJSONArray("tag_infos");
+            group.setTagInfos(new ArrayList<Tags.TagInfo>());
+            for (Object y : tag_infos) {
+                final com.alibaba.fastjson.JSONObject tag_info = (com.alibaba.fastjson.JSONObject) y;
+                final Tags.TagInfo tagInfo = new Tags.TagInfo();
+                tagInfo.setCreated(tag_info.getLong("created"));
+                tagInfo.setDisplayOrder(tag_info.getLong("display_order"));
+                tagInfo.setGroupId(tag_info.getLong("group_id"));
+                tagInfo.setId(tag_info.getLong("id"));
+                tagInfo.setTitle(tag_info.getString("title"));
+                tagInfo.setUpdated(tag_info.getLong("updated"));
+                group.getTagInfos().add(tagInfo);
+            }
+            list.add(group);
+        }
+        return list;
+    }
+
+    /**
+     * 接入端禁用用户
+     *
+     * @param login_names 登陆名列表，逗号分隔
+     * @return
+     * @throws ApiErrorException
+     */
+    public JSONObject suspend(String login_names) throws ApiErrorException {
+        try {
+            HashMap<String, String> params = new HashMap<String, String>();
+            if (null == login_names || "".equals(login_names)) {
+                return null;
+            }
+            params.put("login_names", String.valueOf(login_names));
+
+            Map<String, String> headers = new HashMap<String, String>();
+            Response post = post("/api/v1/users/suspend", params, headers);
+            JSONObject json_result = post.asJSONObject();
+            return json_result;
+        } catch (Exception e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
+
+    /**
+     * 全量同步轮播图
+     *
+     * @param ocuId
+     * @param msgIds
+     * @return
+     * @throws ApiErrorException
+     */
+    public OcuOptResult OcusAllTopMsg(String ocuId, Long[] msgIds) throws ApiErrorException {
+        OcuOptResult result;
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        com.alibaba.fastjson.JSONObject body = new com.alibaba.fastjson.JSONObject();
+        body.put("ocuId", ocuId);
+        body.put("msgIds", msgIds);
+        String jsonBody = body.toJSONString();
+        try {
+            final String s = HttpUtil.postJson(this._serverURL + "/mxpp/custom/all_top_msg", headers, jsonBody);
+            result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
+        } catch (Exception e) {
+            throw new ApiErrorException("OcusAllTopMsg error>>>", 0, e);
+        }
+        return result;
+    }
+
+    /**
+     * 删除文章的接口
+     *
+     * @param msgId
+     * @return
+     * @throws ApiErrorException
+     */
+    public OcuOptResult OcusDelMsg(Long msgId) throws ApiErrorException {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        final String s = HttpUtil.delete(this._serverURL + "/mxpp/custom/message/" + msgId, headers);
+        log.info("OcusDelMsg>>>" + s);
+        OcuOptResult result;
+        try {
+            result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
+        } catch (Exception e) {
+            throw new ApiErrorException("返回JSON错误", 0, e);
+        }
+        return result;
+    }
+
+
+    /**
+     * 修改文章的接口
+     *
+     * @param article
+     * @return
+     * @throws ApiErrorException
+     */
+    public OcuOptResult OcusModifyArticle(ModifyArticle article) throws ApiErrorException {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        final String s = HttpUtil.putJson(this._serverURL + "/mxpp/custom/article", headers, com.alibaba.fastjson.JSONObject.toJSONString(article));
+        OcuOptResult result;
+        try {
+            result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
+        } catch (Exception e) {
+            throw new ApiErrorException("返回JSON错误", 0, e);
+        }
+        return result;
+    }
+
+    /**
+     * @param articleMessage
+     * @param network_id
+     * @return
+     */
+    public Map<String, Object> sendOcuMessageAndGetResult(ArticleMessageNew articleMessage, int network_id) throws ApiErrorException {
+        // _serverURL不能是300端口，必须是nginx端口
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 3);
+        if (articleMessage.getArticles().size() > 1) {
+            for (ArticleNew article : articleMessage.getArticles()) {
+                article.setExpire_time(null);
+                article.setShow_by_popup(false);
+            }
+        }
+
+        String timestamp = articleMessage.getTimestamp();
+        articleMessage.setTimestamp(timestamp);
+        String params = JSON.toJSONString(articleMessage);
+        String url = _serverURL + "/mxpp/ocu_messages/custom";
+
+        PostParameter[] headers = new PostParameter[]{
+                new PostParameter("Content-Type", "application/json"),
+                new PostParameter("User-Agent", "MinxingMessenger public_platform"),
+                new PostParameter("mx_network_id", String.valueOf(network_id))
+        };
+        try {
+            String res = client.post(url, params, headers, true);
+            log.info(res);
+            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(res);
+            if (jsonObject.getLong("msgId") == null) {
+                throw new ApiErrorException(400, jsonObject.getString("message"));
+            }
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("msgId", jsonObject.getLongValue("msgId"));
+            final com.alibaba.fastjson.JSONArray articleIds1 = jsonObject.getJSONArray("articleIds");
+            Long[] articleIds = new Long[articleIds1.size()];
+            for (int i = 0; i < articleIds1.size(); i++) {
+                articleIds[i] = articleIds1.getLong(i);
+            }
+            map.put("articleIds", articleIds);
+            return map;
+        } catch (Exception e) {
+            throw new ApiErrorException("sendOcuMessage error", 0, e);
         }
     }
 }

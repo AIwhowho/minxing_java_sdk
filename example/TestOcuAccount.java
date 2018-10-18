@@ -1,10 +1,12 @@
 import com.minxing.client.app.AppAccount;
+import com.minxing.client.model.ApiErrorException;
 import com.minxing.client.ocu.ArticleMessageNew;
 import com.minxing.client.ocu.ArticleNew;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,7 +72,7 @@ public class TestOcuAccount {
         //创建接入端对象，参数1：敏行地址，参数2：接入端token，在敏行后台中获取这个token，然后加到配置文件或写到代码里
         AppAccount account = AppAccount.loginByAccessToken(
                 "http://dev8.dehuinet.com:8018",   //敏行地址
-                "OWWlmXHXpdzAV0D9qRZFdfI1SYagknGKCyj2haDnMjmjAq-F");  //接入端access token
+                "m7EHRpSGyf6USYI4ukO0pskn1XPvF4p8lPSADRrVhf6eRbQf");  //接入端access token
         //社区ID
         int network_id = 3;
         //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
@@ -119,10 +121,9 @@ public class TestOcuAccount {
         attachment.setType("application/vnd.ms-excel");
 
 
-
-        List<ArticleNew.Attachment> attList = new ArrayList<>();
+        List<ArticleNew.Attachment> attList = new ArrayList<ArticleNew.Attachment>();
         attList.add(attachment);
-        List<ArticleNew.Category> catList = new ArrayList<>();
+        List<ArticleNew.Category> catList = new ArrayList<ArticleNew.Category>();
         catList.add(category1);
         catList.add(category2);
         ArticleNew article = new ArticleNew()
@@ -157,7 +158,14 @@ public class TestOcuAccount {
         articleMessage.setDisplay_order(999);
 
         //发送消息
-        account.sendOcuMessage(articleMessage, network_id);
+//        account.sendOcuMessage(articleMessage, network_id);
+        final Map<String, Object> stringObjectMap;
+        try {
+            stringObjectMap = account.sendOcuMessageAndGetResult(articleMessage, network_id);
+            System.out.println(stringObjectMap);
+        } catch (ApiErrorException e) {
+            e.printStackTrace();
+        }
     }
 
     /*  *//**
