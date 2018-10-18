@@ -4128,11 +4128,28 @@ public class AppAccount extends Account {
     /**
      * 创建待办事项
      *
+     * 此方法不再支持统一待办2.0.0以上版本,因此废弃
+     *
+     * @see createTaskNew()
      * @param task 待办事项
      * @return 待办事项id
      * @throws ApiErrorException
      */
+    @Deprecated
     public int createTask(Task task) throws ApiErrorException {
+        long taskNew = createTaskNew(task);
+        return (int) taskNew;
+    }
+
+    /**
+     * 创建待办事项,目前支持统一待办全部版本
+     *
+     * @see createTaskNew()
+     * @param task 待办事项
+     * @return 待办事项id
+     * @throws ApiErrorException
+     */
+    public long createTaskNew(Task task) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("title", task.getTitle());
@@ -4172,7 +4189,7 @@ public class AppAccount extends Account {
                 JSONObject errors = json_result.getJSONObject("errors");
                 throw new ApiErrorException(Integer.valueOf(errors.getString("status_code")), errors.getString("message"));
             }
-            return json_result.getInt("id");
+            return json_result.getLong("id");
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
@@ -4241,7 +4258,7 @@ public class AppAccount extends Account {
      * @param id
      * @throws ApiErrorException
      */
-    public void deleteTask(int id) throws ApiErrorException {
+    public void deleteTask(long id) throws ApiErrorException {
         try {
             JSONObject json_result = delete(
                     "/api/v2/gtasks/open/tasks/" + id);
@@ -4263,7 +4280,7 @@ public class AppAccount extends Account {
      * @param isComplete 状态,是否已完成
      * @throws ApiErrorException
      */
-    public void changeTaskStatus(int id, boolean isComplete) throws ApiErrorException {
+    public void changeTaskStatus(long id, boolean isComplete) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("id", String.valueOf(id));
