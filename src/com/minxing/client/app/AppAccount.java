@@ -4311,10 +4311,11 @@ public class AppAccount extends Account {
      * @param startAt
      * @param endAt
      */
-    public void leave(int leaveStatus, int userId, String startAt, String endAt) throws ApiErrorException {
+    public void leave(int leaveStatus, int leaveType, int userId, String startAt, String endAt) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("leaveStatus", String.valueOf(leaveStatus));
+            params.put("leaveType", String.valueOf(leaveType));
             params.put("userId", String.valueOf(userId));
             params.put("startAt", startAt);
             params.put("endAt", endAt);
@@ -4326,6 +4327,30 @@ public class AppAccount extends Account {
                 JSONObject errors = json_result.getJSONObject("errors");
                 throw new ApiErrorException(0, errors.getString("message"));
             }
+        } catch (JSONException e) {
+            throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
+
+    /**
+     * 获取请假数据详情
+     * @param userId
+     */
+    public LeaveModel getLeave(int userId) throws ApiErrorException {
+        LeaveModel leaveModel = null;
+        try {
+            JSONObject jsonObject  = this.get("/api/v2/attendance/open/punch/leave/getLeave/" + userId);
+            if(null != jsonObject){
+                leaveModel = new LeaveModel();
+                leaveModel.setId(jsonObject.getInt("id"));
+                leaveModel.setUserId(jsonObject.getInt("userId"));
+                leaveModel.setStartAt(jsonObject.getLong("startAt"));
+                leaveModel.setEndAt(jsonObject.getLong("endAt"));
+                leaveModel.setLeaveStatus(jsonObject.getInt("leaveStatus"));
+                leaveModel.setLeaveType(jsonObject.getInt("leaveType"));
+                leaveModel.setFirstPunchAt(jsonObject.getLong("firstPunchAt"));
+            }
+            return leaveModel;
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
