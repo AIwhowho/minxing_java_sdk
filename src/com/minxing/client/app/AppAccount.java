@@ -1837,10 +1837,9 @@ public class AppAccount extends Account {
     }
 
     /**
-     * 发送公众号消息,指定社区id,传递的用户数组不能为空,否则会抛出异常
+     * 发送公众号消息
      *
-     * @param toUserIds  用户的login_name数组，如果传null,则会抛出异常
-     * @param network_id 用户的社区
+     * @param toUserIds  用户的login_name数组，如果传null,则会发送全员订阅用户
      * @param message    消息对象数据，可以是复杂文本，也可以是简单对象
      * @param ocuId      公众号的id
      * @param ocuSecret  公众号的秘钥，校验是否可以发送
@@ -2806,9 +2805,7 @@ public class AppAccount extends Account {
      * @throws ApiErrorException
      */
     public User addNewUser(User user) throws ApiErrorException {
-
         try {
-
             HashMap<String, String> params = user.toHash();
             Map<String, String> headers = new HashMap<String, String>();
 
@@ -2828,7 +2825,6 @@ public class AppAccount extends Account {
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
-
     }
 
     /**
@@ -4128,11 +4124,28 @@ public class AppAccount extends Account {
     /**
      * 创建待办事项
      *
+     * 此方法不再支持统一待办2.0.0以上版本,因此废弃
+     *
+     * @see createTaskNew()
      * @param task 待办事项
      * @return 待办事项id
      * @throws ApiErrorException
      */
+    @Deprecated
     public int createTask(Task task) throws ApiErrorException {
+        long taskNew = createTaskNew(task);
+        return (int) taskNew;
+    }
+
+    /**
+     * 创建待办事项,目前支持统一待办全部版本
+     *
+     * @see createTaskNew()
+     * @param task 待办事项
+     * @return 待办事项id
+     * @throws ApiErrorException
+     */
+    public long createTaskNew(Task task) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("title", task.getTitle());
@@ -4172,7 +4185,7 @@ public class AppAccount extends Account {
                 JSONObject errors = json_result.getJSONObject("errors");
                 throw new ApiErrorException(Integer.valueOf(errors.getString("status_code")), errors.getString("message"));
             }
-            return json_result.getInt("id");
+            return json_result.getLong("id");
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }
@@ -4241,7 +4254,7 @@ public class AppAccount extends Account {
      * @param id
      * @throws ApiErrorException
      */
-    public void deleteTask(int id) throws ApiErrorException {
+    public void deleteTask(long id) throws ApiErrorException {
         try {
             JSONObject json_result = delete(
                     "/api/v2/gtasks/open/tasks/" + id);
@@ -4263,7 +4276,7 @@ public class AppAccount extends Account {
      * @param isComplete 状态,是否已完成
      * @throws ApiErrorException
      */
-    public void changeTaskStatus(int id, boolean isComplete) throws ApiErrorException {
+    public void changeTaskStatus(long id, boolean isComplete) throws ApiErrorException {
         try {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("id", String.valueOf(id));
@@ -4302,6 +4315,58 @@ public class AppAccount extends Account {
                 JSONObject errors = json_result.getJSONObject("errors");
                 throw new ApiErrorException(0, errors.getString("message"));
             }
+        } catch (JSONException e) {
+            throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
+
+    /**
+     * 请假数据同步
+     * @param leaveStatus
+     * @param userId
+     * @param startAt
+     * @param endAt
+     */
+    public void leave(int leaveStatus, int leaveType, int userId, String startAt, String endAt) throws ApiErrorException {
+        try {
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("leaveStatus", String.valueOf(leaveStatus));
+            params.put("leaveType", String.valueOf(leaveType));
+            params.put("userId", String.valueOf(userId));
+            params.put("startAt", startAt);
+            params.put("endAt", endAt);
+            Map<String, String> headers = new HashMap<String, String>();
+            Response post  = this.post("/api/v2/attendance/open/punch/leave/" + leaveStatus, params, headers);
+            JSONObject json_result = post.asJSONObject();
+            int code = "ok".equalsIgnoreCase(json_result.getString("msg")) ? 1 : 0;
+            if (code != 1) {
+                JSONObject errors = json_result.getJSONObject("errors");
+                throw new ApiErrorException(0, errors.getString("message"));
+            }
+        } catch (JSONException e) {
+            throw new ApiErrorException("返回JSON错误", 500, e);
+        }
+    }
+
+    /**
+     * 获取请假数据详情
+     * @param userId
+     */
+    public LeaveModel getLeave(int userId) throws ApiErrorException {
+        LeaveModel leaveModel = null;
+        try {
+            JSONObject jsonObject  = this.get("/api/v2/attendance/open/punch/leave/getLeave/" + userId);
+            if(null != jsonObject){
+                leaveModel = new LeaveModel();
+                leaveModel.setId(jsonObject.getInt("id"));
+                leaveModel.setUserId(jsonObject.getInt("userId"));
+                leaveModel.setStartAt(jsonObject.getLong("startAt"));
+                leaveModel.setEndAt(jsonObject.getLong("endAt"));
+                leaveModel.setLeaveStatus(jsonObject.getInt("leaveStatus"));
+                leaveModel.setLeaveType(jsonObject.getInt("leaveType"));
+                leaveModel.setFirstPunchAt(jsonObject.getLong("firstPunchAt"));
+            }
+            return leaveModel;
         } catch (JSONException e) {
             throw new ApiErrorException("返回JSON错误", 500, e);
         }

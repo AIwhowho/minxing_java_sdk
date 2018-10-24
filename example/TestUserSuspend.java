@@ -3,6 +3,12 @@ import com.minxing.client.json.JSONObject;
 
 public class TestUserSuspend {
 
+    /**
+     * 人员禁用
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         AppAccount account = AppAccount.loginByAccessToken("http://dev8.dehuinet.com:8018",
                 "r69S9Yl2owuP98W_w0OOuPUr2ud1eNTAaq-rqFCPtb56tj6n");

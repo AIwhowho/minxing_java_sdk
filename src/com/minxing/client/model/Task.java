@@ -21,7 +21,7 @@ public class Task {
      * @param ocuSecret        推送用公众号secret
      * @param instantRemind    是否立即提醒
      */
-    public Task(int id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, Date endAt, Date remindTime, Integer[] remindTimeOffset, String ocuId, String ocuSecret, boolean instantRemind) {
+    public Task(long id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, Date endAt, Date remindTime, Integer[] remindTimeOffset, String ocuId, String ocuSecret, boolean instantRemind) {
         this.id = id;
         this.title = title;
         this.remark = remark;
@@ -53,7 +53,7 @@ public class Task {
      * @param ocuSecret        推送用公众号secret
      * @param instantRemind    是否立即提醒
      */
-    public Task(int id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, Date remindTime, Integer[] remindTimeOffset, String ocuId, String ocuSecret, boolean instantRemind) {
+    public Task(long id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, Date remindTime, Integer[] remindTimeOffset, String ocuId, String ocuSecret, boolean instantRemind) {
         this.id = id;
         this.title = title;
         this.remark = remark;
@@ -145,7 +145,7 @@ public class Task {
      * @param instantRemind 是否立即提醒
      * @param remindTimes   提醒时间
      */
-    public Task(int id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, Date endAt, String ocuId, String ocuSecret, boolean instantRemind, Date[] remindTimes) {
+    public Task(long id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, Date endAt, String ocuId, String ocuSecret, boolean instantRemind, Date[] remindTimes) {
         this.id = id;
         this.title = title;
         this.remark = remark;
@@ -175,7 +175,7 @@ public class Task {
      * @param instantRemind 是否立即提醒
      * @param remindTimes   提醒时间
      */
-    public Task(int id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, String ocuId, String ocuSecret, boolean instantRemind, Date[] remindTimes) {
+    public Task(long id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, String ocuId, String ocuSecret, boolean instantRemind, Date[] remindTimes) {
         this.id = id;
         this.title = title;
         this.remark = remark;
@@ -262,7 +262,7 @@ public class Task {
      * @param ocuSecret     推送用公众号secret
      * @param instantRemind 是否立即提醒
      */
-    public Task(int id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, Date endAt, String ocuId, String ocuSecret, boolean instantRemind) {
+    public Task(long id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, Date endAt, String ocuId, String ocuSecret, boolean instantRemind) {
         this.id = id;
         this.title = title;
         this.remark = remark;
@@ -272,6 +272,8 @@ public class Task {
         this.url = url;
         this.startAt = startAt;
         this.endAt = endAt;
+        this.ocuId = ocuId;
+        this.ocuSecret = ocuSecret;
         this.instantRemind = instantRemind;
     }
 
@@ -288,7 +290,7 @@ public class Task {
      * @param ocuSecret     推送用公众号secret
      * @param instantRemind 是否立即提醒
      */
-    public Task(int id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, String ocuId, String ocuSecret, boolean instantRemind) {
+    public Task(long id, String title, String remark, int userId, String categoryCode, String source, String url, Date startAt, String ocuId, String ocuSecret, boolean instantRemind) {
         this.id = id;
         this.title = title;
         this.remark = remark;
@@ -297,6 +299,8 @@ public class Task {
         this.source = source;
         this.url = url;
         this.startAt = startAt;
+        this.ocuId = ocuId;
+        this.ocuSecret = ocuSecret;
         this.instantRemind = instantRemind;
     }
 
@@ -324,6 +328,8 @@ public class Task {
         this.url = url;
         this.startAt = startAt;
         this.endAt = endAt;
+        this.ocuId = ocuId;
+        this.ocuSecret = ocuSecret;
         this.instantRemind = instantRemind;
     }
 
@@ -348,10 +354,12 @@ public class Task {
         this.source = source;
         this.url = url;
         this.startAt = startAt;
+        this.ocuId = ocuId;
+        this.ocuSecret = ocuSecret;
         this.instantRemind = instantRemind;
     }
 
-    private int id;
+    private long id;
     private String title;
     private String remark;
     private int userId;
@@ -367,11 +375,11 @@ public class Task {
     private Date startAt;
     private Date endAt;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
