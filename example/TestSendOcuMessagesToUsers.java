@@ -1,7 +1,6 @@
 import com.minxing.client.app.AppAccount;
 import com.minxing.client.ocu.Article;
 import com.minxing.client.ocu.ArticleMessage;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 public class TestSendOcuMessagesToUsers {
     public static void main(String[] args) {
