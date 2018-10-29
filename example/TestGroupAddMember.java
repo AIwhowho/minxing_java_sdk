@@ -5,13 +5,13 @@ public class TestGroupAddMember {
 	public static void main(String[] args) {
 		
 		AppAccount account = AppAccount.loginByAccessToken(
-				"http://127.0.0.1:3000",
-				"iPefUDrrardwZMWQXaZnBDBCLyY3iksJTmYtP2rcrJ0EYCJA");
+				"http://example.com",
+				"exampleToken");
 		
 
 		try {
 			
-			account.setFromUserLoginName("oajcs3@js.chinamobile.com"); //设置操作的管理员账户
+			account.setFromUserLoginName("exampleAccount"); //设置操作的管理员账户
 			
 			account.addGroupMember(49L, new String[] {
 					"liuxsgs@js.chinamobile.com" }); //添加人员

@@ -22,7 +22,7 @@ public class TestMxPush {
 	
 	public static void testMultiApn(){
 		//该方法没技术支持 请忽略
-		MXPush push = MXPush.newInstance("http://192.168.100.80:4567",
+		MXPush push = MXPush.newInstance("http://example.com",
 				"0018b58b12c354b2c2c73f2cbe17751025e9",
 				"cd414d524b13293f2423d82cb901fa06");
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -38,7 +38,7 @@ public class TestMxPush {
 	
 	public static void testApn(){
 		//该方法没技术支持 请忽略
-		MXPush push = MXPush.newInstance("http://192.168.100.80:4567",
+		MXPush push = MXPush.newInstance("http://example.com",
 				"0018b58b12c354b2c2c73f2cbe17751025e9",
 				"cd414d524b13293f2423d82cb901fa06");
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -57,7 +57,7 @@ public class TestMxPush {
 	
 	public static void testMqtt1() {
 		//该方法没技术支持 请忽略
-		MXPush push = MXPush.newInstance("http://192.168.100.80:4567",
+		MXPush push = MXPush.newInstance("http://example.com",
 				"0018b58b12c354b2c2c73f2cbe17751025e9",
 				"cd414d524b13293f2423d82cb901fa06");
 		boolean b = push
@@ -69,7 +69,7 @@ public class TestMxPush {
 	
 	public static void testMqtt2() {
 		//该方法没技术支持 请忽略
-		MXPush push = MXPush.newInstance("http://192.168.100.80:4567",
+		MXPush push = MXPush.newInstance("http://example.com",
 				"0018b58b12c354b2c2c73f2cbe17751025e9",
 				"cd414d524b13293f2423d82cb901fa06");
 		List<String> list = new ArrayList<String>();
@@ -83,7 +83,7 @@ public class TestMxPush {
 
 	public static void testAny1(){
 		//该方法有技术支持 请放心使用
-		MXPush push = MXPush.newInstance("http://192.168.100.80:4567",
+		MXPush push = MXPush.newInstance("http://example.com",
 				"0018b58b12c354b2c2c73f2cbe17751025e9",
 				"cd414d524b13293f2423d82cb901fa06");
 		boolean b = push
@@ -95,7 +95,7 @@ public class TestMxPush {
 	
 	public static void testAny2(){
 		//该方法有技术支持 请放心使用
-		MXPush push = MXPush.newInstance("http://192.168.100.80:4567",
+		MXPush push = MXPush.newInstance("http://example.com",
 				"0018b58b12c354b2c2c73f2cbe17751025e9",
 				"cd414d524b13293f2423d82cb901fa06");
 		Map<String,Object> map = new HashMap<String,Object>();

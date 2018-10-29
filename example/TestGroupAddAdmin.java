@@ -19,10 +19,10 @@ public class TestGroupAddAdmin {
 		// }
 
 		try {
-			account.setFromUserLoginName("oajcs3@js.chinamobile.com");
+			account.setFromUserLoginName("exampleAccount");
 			account.addGroupAdmin(54L, new String[] {
-					"oajcs3@js.chinamobile.com",
-					"aijianlin@nt.js.chinamobile.com" });
+					"exampleAccount1",
+					"exampleAccount2" });
 
 			com.minxing.client.organization.User[] admins = account
 					.getGroupAdmins(54L);

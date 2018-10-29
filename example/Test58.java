@@ -7,8 +7,8 @@ import com.minxing.client.organization.User;
 public class Test58 {
 
 	static AppAccount account = AppAccount.loginByAccessToken(
-			"http://192.168.100.194",
-			"t62WWMrX4LdUW7D48e9_4tvRvkrrCgqDPV8qddLwIEMRCGYe");
+			"http://example.com",
+			"example.com");
 	public static void main(String[] args) throws Exception {
 		account.deleteUserByLoginName("yl");
 		

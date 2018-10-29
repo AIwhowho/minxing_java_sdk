@@ -1,7 +1,5 @@
 package com.minxing.client.utils;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 

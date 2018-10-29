@@ -10,17 +10,17 @@ public class TestSendPulginMessage {
 
 
     private static void sendShareLinke() {
-        AppAccount appAccount = AppAccount.loginByAccessToken("http://dev8.dehuinet.com:8018", "DDQ_ltvOeFI2q6_GYywAo5c2c4qfE6nGeh16iZN8LFu632y3");
+        AppAccount appAccount = AppAccount.loginByAccessToken("example.com", "exampleToken");
         appAccount.setFromUserId(11917l);
 
-        String msg="{\"url\":\"http://39.106.47.170/mxpp/articles/181\",\"app_url\":\"\",\"image_url\":\"http://39.106.47.170/mxpp/upload/mxpp_1524216825823.jpg\",\"title\":\"作为理财新手，你要知道这些\",\"description\":\"新手理财投资前，可以先对自己的风险偏好进行测试。每个人对待风险都有自己的认知。\"}";
+        String msg="{\"url\":\"http://example.com/mxpp/articles/181\",\"app_url\":\"\",\"image_url\":\"http://example.com/mxpp/upload/mxpp_1524216825823.jpg\",\"title\":\"作为理财新手，你要知道这些\",\"description\":\"新手理财投资前，可以先对自己的风险偏好进行测试。每个人对待风险都有自己的认知。\"}";
 
         String result = appAccount.sendShareLinkToUserIds("105", JSONObject.parse(msg));
         System.out.println(result);
     }
 
     private static void sendPlugin() {
-        AppAccount appAccount = AppAccount.loginByAccessToken("http://dev8.dehuinet.com:8018", "DDQ_ltvOeFI2q6_GYywAo5c2c4qfE6nGeh16iZN8LFu632y3");
+        AppAccount appAccount = AppAccount.loginByAccessToken("http://example.com", "exampleToken");
         appAccount.setFromUserId(11917l);
 
         String msg = "{data:{\"mx_manage_description\":\"投资天数：83\",\"mx_manage_title\":\"理财产品推荐\",\"mx_manage_name\":\"创利18802\",\"launch_url\":\"launchApp://jx_bank?#detail\",\"mx_manage_percent\":\"4.1%\"},\"key\":\"mx_money_product\"}";
