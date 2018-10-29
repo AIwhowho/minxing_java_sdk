@@ -5,12 +5,12 @@ public class TestSearchUser {
 	public static void main(String[] args) {
 
 		AppAccount account = AppAccount.loginByAccessToken(
-				"http://test.dehuinet.com:8030",
-				"IXjcsEuQfi0dfbSBKfNpUWVS7XbILmzT-WE40CrKPhbJKpzF");
+				"http://example.com",
+				"exampleToken");
 
 		// OcuAccount oa = new OcuAccount();
 		// oa.setApiPrefix("/api/v1");
-		// oa.setRootUrl("http://192.168.100.80:3000");
+		// oa.setRootUrl("http://example.com");
 		// oa.setOcuId("a090d4e87df3aa72b828cfd65dc950e8");
 		// oa.setOcuSecret("4c05b25c45f453c0d169d87d88e41690");
 		// User user = oa

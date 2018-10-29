@@ -22,15 +22,13 @@ public class TestMultiPoll {
 	static String dept_code = "001";
 
 	// 服务器地址
-	static String http = "http://test.dehuinet.com:8030/";
-//	static String http = "http://localhost:3000/";
+	static String http = "http://example.com/";
 
 	// access_token
-	static String token = "14tcrJ_1ZOyRnXlvXROzP8CTWyemge0TU5dj2fk35XeQzPcf";
-//	static String token = "rPlgq_3-tVGWlRD1CHmENlbHhkpUTOosK9WvJLFaGy1cmYf3";
+	static String token = "exampleToken";
 
 	//admin login_name
-	static String admin_login_name = "admin@dehuinet";
+	static String admin_login_name = "admin@example";
 //	static String admin_login_name = "admin@local";
 
 	public static void main(String[] ss) {

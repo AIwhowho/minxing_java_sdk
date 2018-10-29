@@ -7,7 +7,7 @@ public class PushAppMessageByApi {
 	public static void main(String[] args) throws InterruptedException {
 
 
- AppAccount account = AppAccount.loginByAccessToken("http://test.dehuinet.com:8030", "U5uP-vayHp1jFTOb2twDloGkZEGdTgmEggaeYfWGbsvneVZc");
+ AppAccount account = AppAccount.loginByAccessToken("http://example.com", "exampleToken");
 
 		
 		

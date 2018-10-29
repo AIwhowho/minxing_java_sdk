@@ -4,8 +4,8 @@ import com.minxing.client.model.ApiErrorException;
 import com.minxing.client.organization.User;
 
 public class TestUserBirthday {
-    private static final String serverPath = "http://dev5.dehuinet.com:8015";
-    private static final String accessToken = "S3WUv8iMUqGAgehUSFHNEDhlXVbZeZoOqecu54-po2BR7orR";
+    private static final String serverPath = "http://example.com";
+    private static final String accessToken = "exampleToken";
 
     private static AppAccount appAccount = null;
 

@@ -35,8 +35,8 @@ public class TestCancelOcuTopAccount {
 
         //创建接入端对象，参数1：敏行地址，参数2：接入端token，在敏行后台中获取这个token，然后加到配置文件或写到代码里
         AppAccount account = AppAccount.loginByAccessToken(
-                "http://test.dehuinet.com:8030",   //敏行地址
-                "9EDVVkLuI3dXAiRU5XPtVREQxRg5g7E3pCxaH_BD9RygfTfJ");  //接入端access token
+                "http://example.com",   //敏行地址
+                "exampleToken");  //接入端access token
         //社区ID
         int network_id = 3;
         CancelOcuTop cancelOcuTop = new CancelOcuTop();
