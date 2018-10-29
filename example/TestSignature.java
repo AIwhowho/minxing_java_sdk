@@ -40,10 +40,10 @@ public class TestSignature {
 		// oa.setApiPrefix("/api/v1");
 		// oa.setOcuId("222dac93095d865058c8e66b04580169");
 		// oa.setOcuSecret("30def532ce57c7505d0afaae14121e46");
-		// oa.setRootUrl("http://ezjkx.ziq.gov.cn");
+		// oa.setRootUrl("http://example.com");
 
 		AppAccount account = AppAccount.loginByAccessToken(
-				"http://localhost:3000",
+				"http://exampleToken",
 				"iPefUDrrardwZMWQXaZnBDBCLyY3iksJTmYtP2rcrJ0EYCJA");
 
 		try {
@@ -58,8 +58,8 @@ public class TestSignature {
 
 	private static void getUserBySsoToken(String mx_sso_token) {
 
-		String ocu_id = "DAAAAFc_nNNEOvkO1J8JnKy9QEBbrncpACutQ-25jauPlRb0";
-		String access_token = "59p68NMCUftkkeiXAz9Pj4wpjB7umUSzFyPbQUHsxcHPibuf";
+		String ocu_id = "exampleOcuId";
+		String access_token = "exampleToken";
 
 		AppAccount account = AppAccount.loginByAccessToken("http://敏行服务器:3000",
 				access_token);
@@ -74,15 +74,11 @@ public class TestSignature {
 
 	}
 
-	// quail/admin/minxing_callback?token=203663f72a307792263e2aa9c3c5df06%3AQd8Iv6Nkq0QjOCk6kHcils5gtKk%3D
-	// &timestamp=1420600435
-	// &nonce=943385
-	// &open_id=ec92040544cd062dc14afcabdb5dfb2143839684916a3e482d889bc14ecd7f394469bc5892f89e8e8d21eb69a326a020"
 	public static void getUserAccessToken() {
 		// 从创建的接入端获取到接入端的access_token
-		String access_token = "Dsl-RVAru1qTd_xoku_yRoB0fogJwbDGS4S6ny7WizYNh4_I";
+		String access_token = "exampleToken";
 		AppAccount account = AppAccount.loginByAccessToken(
-				"https://www.minxing365.com", access_token);
+				"https://example.com", access_token);
 		// 敏行系统的登录名
 		String login_name = "test1@ecinc";
 		// 生成该用户的sso_token

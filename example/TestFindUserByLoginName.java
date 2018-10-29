@@ -7,7 +7,7 @@ public class TestFindUserByLoginName {
 	
 	public static void main(String[] args) {
 		AppAccount account = AppAccount.loginByAccessToken(
-				"http://ylx.jhvpn.cn:9001",
+				"http://mxserver.com:3000",
 				"tjC_t5vUrcjIQCP4h9buBFp6jVycg9D0NtxyAMb2itL2ZawI");
 
 		try {

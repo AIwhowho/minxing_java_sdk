@@ -19,11 +19,11 @@ public class TestAppSyncAccount {
 	public static void main(String[] args) throws Exception {
 
 		/*AppAccount account = AppAccount.loginByAccessToken(
-				"http://dev3.dehuinet.com:8013",
-				"SPAS6hBFBqlj4bEr9rP3l42M7nhCs-JKBeP9O5VOV3PxmlIk");*/
+				"http://example.com",
+				"exampleToken");*/
 		AppAccount account = AppAccount.loginByAccessToken(
-				"http://192.168.100.245",
-				"IMG8a-LQSDKufW7HvarOSXQHNWLPDts8z2NpgZ_9sQT3Zlww");
+				"http://example.com",
+				"exampleToken");
 
 		// testSetRootDepartment(account);
 		// testAddDepartment(account);

@@ -69,10 +69,10 @@ public class SendMessageByApi {
 	
 	private static void createConversation(AppAccount account) {
 
-		account.setFromUserLoginName("oajcs3@js.chinamobile.com");
+		account.setFromUserLoginName("exampleAccount");
 
-		String[] login_names = new String[] { "w8@js.chinamobile.com",
-				"zzzzzzw", "18611112222" };
+		String[] login_names = new String[] { "exampleAccount1",
+				"exampleAccount2", "exampleAccount3"  };
 		Conversation conversation = account.createConversation(login_names,
 				"大家在这里讨论吧");
 		System.out.println(conversation);
@@ -81,10 +81,10 @@ public class SendMessageByApi {
 
 	private static void createConversationWithGraph(AppAccount account) {
 
-		account.setFromUserLoginName("oajcs3@js.chinamobile.com");
+		account.setFromUserLoginName("exampleAccount");
 
-		String[] login_names = new String[] { "w8@js.chinamobile.com",
-				"zzzzzzw", "18611112222" };
+		String[] login_names = new String[] { "exampleAccount1",
+				"exampleAccount2", "exampleAccount3" };
 		Graph g = new Graph();
 		g.setURL("http://data.com/graph/1");
 		g.setTitle("这个是一个Graph的测试");
@@ -122,7 +122,7 @@ public class SendMessageByApi {
 		// 发送消息给莫个人
 
 		User a = new User();
-		a.setLoginName("oajcs3@js.chinamobile.com");
+		a.setLoginName("exampleAccount");
 		// a.setId(30766L);
 
 		TextMessage message = account.sendMessageToUser(a, "一条个人消息2");
@@ -138,7 +138,7 @@ public class SendMessageByApi {
 		slink.setImageURL("https://www.baidu.com/img/bdlogo.png");
 		slink.setDescription("描述信息");
 
-		account.setFromUserLoginName("oajcs3@js.chinamobile.com");
+		account.setFromUserLoginName("exampleAccount");
 		TextMessage message = account
 				.sendSharelinkToGroup(50, "测试api分享", slink);
 		System.out.println(message);

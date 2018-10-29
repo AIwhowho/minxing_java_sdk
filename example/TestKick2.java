@@ -7,8 +7,8 @@ public class TestKick2 {
 
 
 		AppAccount account = AppAccount.loginByAccessToken(
-				"http://test1.dehuinet.com:8031",
-				"DKsIMo4PbRQ2rwTdxmsOboYuFgtqH6z3uOrTnDBpZdTMjHNT");
+				"http://example.com",
+				"exampleToken");
 
 		try {
 			System.out.println(account.kick2("t11"));

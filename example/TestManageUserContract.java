@@ -8,7 +8,7 @@ public class TestManageUserContract {
 		
 		AppAccount account = AppAccount.loginByAccessToken(
 				"http://127.0.0.1:3000",
-				"iPefUDrrardwZMWQXaZnBDBCLyY3iksJTmYtP2rcrJ0EYCJA");
+				"exampleToken");
 		// User[] users = account.findUserByLoginNames(new String[]
 		// {"oajcs3@js.chinamobile.com","aijianlin@nt.js.chinamobile.com"});
 		//
@@ -19,10 +19,10 @@ public class TestManageUserContract {
 		// }
 
 		try {
-			account.setFromUserLoginName("oajcs3@js.chinamobile.com");
+			account.setFromUserLoginName("exampleAccount");
 			account.addGroupAdmin(54L, new String[] {
-					"oajcs3@js.chinamobile.com",
-					"aijianlin@nt.js.chinamobile.com" });
+					"exampleAccount1",
+					"exampleAccount2" });
 
 			com.minxing.client.organization.User[] admins = account
 					.getGroupAdmins(54L);

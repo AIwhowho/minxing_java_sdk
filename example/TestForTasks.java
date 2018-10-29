@@ -4,8 +4,8 @@ import com.minxing.client.model.TaskBadge;
 public class TestForTasks {
     public static void main(String[] args) {
         AppAccount account = AppAccount.loginByAccessToken(
-                "http://dev7.dehuinet.com:8017",
-                "lkFUYjv-zFK52WfRHFXmx2WWn8dvxzKIS0H-RFgSRVG2szxN");
+                "http://example.com",
+                "exampleToken");
         try {
             //测试get /api/v2/gtasks/open/badge方法，其中两个参数都不能为空字符串，如果为空返回空对象
             TaskBadge taskBadge = account.getBadge("1362", "81b5bd45b3a849d898c2394b9408d124");

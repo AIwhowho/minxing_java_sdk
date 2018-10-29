@@ -10,14 +10,14 @@ public class Test2 {
 		  //通过应用推送消息
         AppAccount account = AppAccount.loginByAccessToken(
    			  
-                "http://test.dehuinet.com:8030",
+                "http://example.com",
  
-                 "IXjcsEuQfi0dfbSBKfNpUWVS7XbILmzT-WE40CrKPhbJKpzF");
+                 "exampleToken");
 //        AppAccount account = AppAccount.loginByAccessToken(
 //        		
-//        		"http://192.168.100.223",
+//        		"http://example.com",
 //        		
-//        		"R4wAdO_0Sg2XardAgWe5VWLzHc-jFl0OmjW0RDhuDmhoqsKt");
+//        		"exampleToken");
    	  String custom = "{\"set\":\"true\",\"get\":\"啦啦\"}";
    	  AppMessage m = new AppMessage(1, "content",custom, true);
    	  

@@ -4,8 +4,8 @@ import com.minxing.client.model.MxException;
 public class TestAppVisibleScope {
 
     public static void main(String[] args) {
-        AppAccount account = AppAccount.loginByAccessToken("http://192.168.100.245",
-                "AfzWGXEobd3le3k__q-mfWT5erzP9_kURRojRzPTMo0e4FeW");
+        AppAccount account = AppAccount.loginByAccessToken("http://example.com",
+                "exampleToken");
 
         //删除应用可见范围的接口
         String arg0 = "socket";

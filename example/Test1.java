@@ -7,8 +7,8 @@ public class Test1 {
 	
 	public static void main(String[] args) throws Exception{
 
-        AppAccount account = AppAccount.loginByAccessToken("http://dev8.dehuinet.com:8018",
-                "NczP_3u5DT5FRC_2OP5EPbQ4VgQHYN6wuS1lI-6W40PIVMxX");
+        AppAccount account = AppAccount.loginByAccessToken("http://example.com",
+                "exampleToken");
 	account.setFromUserLoginName("t63"); //确保用社区管理员的身份来调用api
 //	AppVisibleScope s = (AppVisibleScope) account.getAppVisibleScope("mail");
 ////

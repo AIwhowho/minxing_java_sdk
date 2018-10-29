@@ -5,7 +5,7 @@ import com.minxing.client.model.PunchInfo;
 public class TestPunch {
 
     public static void main(String[] args) throws ApiErrorException {
-        AppAccount appAccount = AppAccount.loginByAccessToken("http://dev7.dehuinet.com:8017", "m7EHRpSGyf6USYI4ukO0pskn1XPvF4p8lPSADRrVhf6eRbQf");
+        AppAccount appAccount = AppAccount.loginByAccessToken("http://example.com", "exampleToken");
         // 打卡
         PunchInfo punch = appAccount.punch(109);
         // 打卡,同时指定打卡日期及时间,日期或时间不指定将使用服务器默认时间

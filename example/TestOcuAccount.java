@@ -50,8 +50,8 @@ public class TestOcuAccount {
 
 /*        //创建接入端对象，参数1：敏行地址，参数2：接入端token，在敏行后台中获取这个token，然后加到配置文件或写到代码里
         AppAccount account = AppAccount.loginByAccessToken(
-                "http://test.dehuinet.com:8030",   //敏行地址
-                "9EDVVkLuI3dXAiRU5XPtVREQxRg5g7E3pCxaH_BD9RygfTfJ");  //接入端access token
+                "http://example.com",   //敏行地址
+                "exampleToken");  //接入端access token
         //社区ID
         int network_id = 3;
         //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
@@ -69,8 +69,8 @@ public class TestOcuAccount {
 
         //创建接入端对象，参数1：敏行地址，参数2：接入端token，在敏行后台中获取这个token，然后加到配置文件或写到代码里
         AppAccount account = AppAccount.loginByAccessToken(
-                "http://dev8.dehuinet.com:8018",   //敏行地址
-                "OWWlmXHXpdzAV0D9qRZFdfI1SYagknGKCyj2haDnMjmjAq-F");  //接入端access token
+                "http://example.com",   //敏行地址
+                "exampleToken");  //接入端access token
         //社区ID
         int network_id = 3;
         //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
@@ -89,8 +89,8 @@ public class TestOcuAccount {
 
 /*        //创建接入端对象，参数1：敏行地址，参数2：接入端token，在敏行后台中获取这个token，然后加到配置文件或写到代码里
         AppAccount account = AppAccount.loginByAccessToken(
-                "http://192.168.100.185",   //敏行地址
-                "2d0z_YwXFCwZDJ_T9boP4vwPGrMkhZurG4SrpfuMjoGs4ots");  //接入端access token
+                "http://example.com",   //敏行地址
+                "exampleToken");  //接入端access token
         //社区ID
         int network_id = 7;
         //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
@@ -110,7 +110,7 @@ public class TestOcuAccount {
         ArticleNew.Attachment attachment = new ArticleNew.Attachment();
         attachment.setName("6a702689-9b60-4e2e-b4e9-ed89ccf1fb4c (1) 2_1513765766550.zip");
         //附件下载地址
-        attachment.setOrigin_url("http://www.kfpolice.com/WEB/Files/Bgxz/%e9%99%84%e4%bb%b61%e3%80%8a%e6%9c%ba%e5%8a%a8%e8%bd%a6%e9%a9%be%e9%a9%b6%e8%af%81%e7%94%b3%e8%af%b7%e8%a1%a8%e3%80%8b%e5%bc%8f%e6%a0%b7_20160328105816.xls");
+        attachment.setOrigin_url("http://example.com/WEB/Files/Bgxz/%e9%99%84%e4%bb%b61%e3%80%8a%e6%9c%ba%e5%8a%a8%e8%bd%a6%e9%a9%be%e9%a9%b6%e8%af%81%e7%94%b3%e8%af%b7%e8%a1%a8%e3%80%8b%e5%bc%8f%e6%a0%b7_20160328105816.xls");
         //附件名称
         attachment.setOriginal_name("附件1《机动车驾驶证申请表》式样_20160328105816.xls");
         //附件大小，单位：字节
@@ -129,7 +129,7 @@ public class TestOcuAccount {
 //				文章标题
                 .setTitle("备降" + System.currentTimeMillis())
 //				封面的图片地址
-                .setImage("http://up.henan.china.cn/2017/0517/1494992198452.jpg")
+                .setImage("http://example.com/2017/0517/1494992198452.jpg")
 //				文章简介
                 .setDescription("11月3日，从纽约飞往广州的南航CZ600航班上，一名女性旅客空中突发病情。")
 //				文章作者
@@ -168,8 +168,8 @@ public class TestOcuAccount {
 
         //创建接入端对象，参数1：敏行地址，参数2：接入端token，在敏行后台中获取这个token，然后加到配置文件或写到代码里
         AppAccount account = AppAccount.loginByAccessToken(
-                "http://202.100.187.208:1880",   //敏行地址
-                "1Z612UrFK7lm3RRSf9oTJhgzdZmVisznuhgUijg_SVTSHAYv");  //接入端access token
+                "http://example.com",   //敏行地址
+                "exampleToken");  //接入端access token
         //社区ID
         int network_id = 3;
         //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
@@ -202,7 +202,7 @@ public class TestOcuAccount {
 //				文章标题
                 .setTitle("备降" + System.currentTimeMillis())
 //				封面的图片地址
-                .setImage("http://up.henan.china.cn/2017/0517/1494992198452.jpg")
+                .setImage("http://example.com/2017/0517/1494992198452.jpg")
 //				文章简介
                 .setDescription("11月3日，从纽约飞往广州的南航CZ600航班上，一名女性旅客空中突发病情。")
 //				文章作者
