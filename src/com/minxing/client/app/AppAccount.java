@@ -4601,7 +4601,7 @@ public class AppAccount extends Account {
             final String s = HttpUtil.postJson(this._serverURL + "/mxpp/custom/all_top_msg", headers, jsonBody);
             result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
         } catch (Exception e) {
-            throw new ApiErrorException("OcusAllTopMsg error>>>", 0, e);
+            throw new ApiErrorException("OcusAddTopMsg error>>>", 0, e);
         }
         return result;
     }
