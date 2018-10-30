@@ -12,14 +12,15 @@ import java.util.Map;
 
 public class TestOcuAccountV2 {
 
-    static String serverURL = "http://dev8.dehuinet.com:8018";//敏行地址
-    static String bearToken = "m7EHRpSGyf6USYI4ukO0pskn1XPvF4p8lPSADRrVhf6eRbQf"; //接入端access token
+    static String serverURL = "http://dev9.dehuinet.com:8019";//敏行地址
+    static String bearToken = "KWocpNQBNrkyZW2XHOlz7N_XCuXdJFitgkRuy7-dvn6Ae57t"; //接入端access token
 
     public static void main(String[] args) throws ApiErrorException {
-        sendOcuMessage();//发送
-        deleteOcuMessage();//删除
-        allTopMsg();//全量同步轮播图
-        modifyArticle();//修改文章的接口
+//        sendOcuMessage();//发送
+//        deleteOcuMessage();//删除
+//        allTopMsg();//全量同步轮播图
+        addTopMsg();//增量同步轮播图
+//        modifyArticle();//修改文章的接口
     }
 
     /**
@@ -59,6 +60,25 @@ public class TestOcuAccountV2 {
         System.out.println(result);
     }
 
+
+    /**
+     * 增量同步轮播图
+     *
+     * @throws ApiErrorException
+     */
+    private static void addTopMsg() throws ApiErrorException {
+        //创建接入端对象，参数1：敏行地址，参数2：接入端token，在敏行后台中获取这个token，然后加到配置文件或写到代码里
+        AppAccount account = AppAccount.loginByAccessToken(
+                serverURL,
+                bearToken);
+        //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
+        String ocuId = "domain_2";
+        Long[] msgIds = new Long[1];//msgId数组
+        msgIds[0] = 1005l;
+        final OcuOptResult result = account.OcusAddTopMsg(ocuId, msgIds);
+        System.out.println(result);
+    }
+
     /**
      * 全量同步轮播图
      *
@@ -71,9 +91,8 @@ public class TestOcuAccountV2 {
                 bearToken);
         //ocuId和ocuSecret这俩参数在公众号平台的管理页面里找
         String ocuId = "domain_2";
-        Long[] msgIds = new Long[2];//msgId数组
-        msgIds[0] = 5058l;
-        msgIds[1] = 5060l;
+        Long[] msgIds = new Long[1];//msgId数组
+        msgIds[0] = 1471l;
         final OcuOptResult result = account.OcusAllTopMsg(ocuId, msgIds);
         System.out.println(result);
     }

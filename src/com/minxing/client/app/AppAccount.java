@@ -4607,6 +4607,32 @@ public class AppAccount extends Account {
     }
 
     /**
+     * 增量同步轮播图
+     *
+     * @param ocuId
+     * @param msgIds
+     * @return
+     * @throws ApiErrorException
+     */
+    public OcuOptResult OcusAddTopMsg(String ocuId, Long[] msgIds) throws ApiErrorException {
+        OcuOptResult result;
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-Agent", this.user_agent);
+        headers.put("Authorization", "Bearer " + this._token);
+        com.alibaba.fastjson.JSONObject body = new com.alibaba.fastjson.JSONObject();
+        body.put("ocuId", ocuId);
+        body.put("msgIds", msgIds);
+        String jsonBody = body.toJSONString();
+        try {
+            final String s = HttpUtil.postJson(this._serverURL + "/mxpp/custom/add_top_msg", headers, jsonBody);
+            result = com.alibaba.fastjson.JSONObject.parseObject(s, OcuOptResult.class);
+        } catch (Exception e) {
+            throw new ApiErrorException("OcusAllTopMsg error>>>", 0, e);
+        }
+        return result;
+    }
+
+    /**
      * 删除文章的接口
      *
      * @param msgId
