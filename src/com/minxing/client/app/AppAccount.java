@@ -409,14 +409,6 @@ public class AppAccount extends Account {
      *                        要把文件存进这个file
      * @return
      */
-
-    /**
-     *
-     * @param file_id
-     * @param fileFingerPrint
-     * @param f
-     * @return
-     */
     public boolean downloadFileAndSave(int file_id, String fileFingerPrint,
                                        File f) {
         Map<String, String> params = new HashMap<String, String>();
