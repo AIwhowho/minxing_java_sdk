@@ -374,7 +374,7 @@ public class AppAccount extends Account {
     }
 
     /**
-     * 发送文件到会话聊天中
+     * 下载文件到会话聊天中
      *
      * @param fileFingerPrint 文件的MD5校验码
      * @return
@@ -402,11 +402,19 @@ public class AppAccount extends Account {
     }
 
     /**
-     * 发送文件到会话聊天中
+     * 会话聊天中下载文件并保存
      *
      * @param fileFingerPrint 文件的MD5校验码
      *                        <p>
      *                        要把文件存进这个file
+     * @return
+     */
+
+    /**
+     *
+     * @param file_id
+     * @param fileFingerPrint
+     * @param f
      * @return
      */
     public boolean downloadFileAndSave(int file_id, String fileFingerPrint,
